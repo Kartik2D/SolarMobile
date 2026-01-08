@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import houseModelUrl from "../assets/house4.glb?url";
 
 @customElement("app-house-card")
 export class HouseCard extends LitElement {
@@ -12,12 +13,13 @@ export class HouseCard extends LitElement {
   private animationId!: number;
   private observer?: IntersectionObserver;
   private zoomValue = 2.2; // Zoom value
+  private handleResize = () => this.onWindowResize();
 
   @property({ type: String })
   title = "3D House Model";
 
   @property({ type: String })
-  modelPath = "/house4.glb";
+  modelPath = houseModelUrl;
 
   @property({ type: Number })
   height = 400;
@@ -103,6 +105,7 @@ export class HouseCard extends LitElement {
     if (this.observer) {
       this.observer.disconnect();
     }
+    window.removeEventListener("resize", this.handleResize);
   }
 
   firstUpdated() {
@@ -179,14 +182,15 @@ export class HouseCard extends LitElement {
     this.scene.add(directionalLight);
 
     // Handle resize
-    window.addEventListener("resize", () => this.onWindowResize());
+    window.addEventListener("resize", this.handleResize);
   }
 
   private async loadModel() {
     const loader = new GLTFLoader();
 
     try {
-      const gltf = await loader.loadAsync(this.modelPath);
+      const modelUrl = this.resolveModelPath();
+      const gltf = await loader.loadAsync(modelUrl);
       this.model = gltf.scene;
 
       // Scale and position the model
@@ -208,36 +212,55 @@ export class HouseCard extends LitElement {
       this.isLoading = false;
       this.animateModel();
       this.requestUpdate();
+
+      // Dispatch event to hide main loading screen
+      this.dispatchEvent(
+        new CustomEvent("model-loaded", {
+          bubbles: true,
+          composed: true,
+        })
+      );
     } catch (error) {
       console.error("Error loading 3D model:", error);
       this.isLoading = false;
       this.hasError = true;
       this.requestUpdate();
+
+      // Dispatch event to hide main loading screen even on error
+      this.dispatchEvent(
+        new CustomEvent("model-loaded", {
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
   }
 
   private animateModel() {
     this.animationId = requestAnimationFrame(() => this.animateModel());
 
-    // Slow constant rotation around Y-axis
-    if (this.model) {
-      this.model.rotation.y += 0.005; // Adjust speed as needed (0.005 is quite slow)
-    }
+    // Only animate when in view for performance optimization
+    if (this.isInView) {
+      // Slow constant rotation around Y-axis
+      if (this.model) {
+        this.model.rotation.y += 0.005; // Adjust speed as needed (0.005 is quite slow)
+      }
 
-    // Update shader time uniform for pulsing effect
-    if (this.model) {
-      const time = Date.now() * 0.001; // Convert to seconds
-      this.model.traverse((child) => {
-        if (
-          child instanceof THREE.Mesh &&
-          child.material instanceof THREE.ShaderMaterial
-        ) {
-          child.material.uniforms.time.value = time;
-        }
-      });
-    }
+      // Update shader time uniform for pulsing effect
+      if (this.model) {
+        const time = Date.now() * 0.001; // Convert to seconds
+        this.model.traverse((child) => {
+          if (
+            child instanceof THREE.Mesh &&
+            child.material instanceof THREE.ShaderMaterial
+          ) {
+            child.material.uniforms.time.value = time;
+          }
+        });
+      }
 
-    this.renderer.render(this.scene, this.camera);
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 
   private onWindowResize() {
@@ -351,6 +374,22 @@ export class HouseCard extends LitElement {
           : ""}
       </div>
     `;
+  }
+
+  private resolveModelPath(): string {
+    if (!this.modelPath) {
+      return houseModelUrl;
+    }
+
+    if (
+      this.modelPath.startsWith("http") ||
+      this.modelPath.startsWith("//") ||
+      this.modelPath.startsWith("/")
+    ) {
+      return this.modelPath;
+    }
+
+    return new URL(this.modelPath, import.meta.url).href;
   }
 }
 

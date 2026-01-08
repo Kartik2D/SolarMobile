@@ -37,8 +37,8 @@ export interface ChartDataset {
 @customElement("app-chart-stack")
 export class AppChartStack extends LitElement {
   @property({ type: String }) title = "Multi-Line Chart";
-  @property({ type: Array }) labels: string[] = [];
-  @property({ type: Array }) datasets: ChartDataset[] = [];
+  @property({ attribute: false }) labels: string[] = [];
+  @property({ attribute: false }) datasets: ChartDataset[] = [];
 
   @query("canvas") canvas!: HTMLCanvasElement;
 
@@ -70,18 +70,14 @@ export class AppChartStack extends LitElement {
     :host {
       display: block;
       width: 100%;
-      height: 450px;
-      background-color: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6);
+      height: 380px;
       box-sizing: border-box;
     }
 
     .chart-container {
       width: 100%;
-      height: calc(100% - 50px);
+      height: calc(100% - 36px);
       position: relative;
-      margin-top: var(--space-2);
     }
 
     canvas {
@@ -90,12 +86,12 @@ export class AppChartStack extends LitElement {
     }
 
     .chart-title {
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-base);
       font-weight: var(--font-weight-semibold);
       margin-bottom: var(--space-2);
       color: var(--text);
       text-align: center;
-      height: 32px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;

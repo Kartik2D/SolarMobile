@@ -1,181 +1,182 @@
-import "./components/button";
-import "./components/card";
-import "./components/chart";
-import "./components/chart-stack";
-import "./components/house-card";
+import "./index";
+import "./index.css";
 
-// Basic mobile app setup
-document.addEventListener("DOMContentLoaded", () => {
-  const app = document.getElementById("app")!;
+import type { AppChart } from "./components/chart";
+import type { AppChartStack } from "./components/chart-stack";
 
-  app.innerHTML = `
-    <div class="container">
-      
-      <div class="stack">
-        <!-- 3D House Model Card -->
-        <app-house-card title="3D House Model" height="400"></app-house-card>
-        
-        <!-- 3D Chart Stack -->
-        <app-card title="Chart Stack">
-          <app-chart-stack></app-chart-stack>
-          <div slot="footer" class="card-actions card-actions--flush">
-            <app-button variant="flush">Amazing</app-button>
-            <app-button variant="flush">Incredible</app-button>
-          </div>
-        </app-card>
-        
-        <!-- Solar Energy Chart -->
-        <app-card title="Solar Energy Production">
-          <app-chart 
-            title="Monthly Solar Energy Output" 
-            label="Energy (kWh)"
-            border-color="#ff6b35"
-            background-color="rgba(255, 107, 53, 0.2)">
-          </app-chart>
-          <div slot="footer" class="card-actions card-actions--flush">
-            <app-button variant="flush">View Details</app-button>
-            <app-button variant="flush">Export Data</app-button>
-          </div>
-        </app-card>
-        
-        <!-- Temperature Chart -->
-        <app-card title="Temperature Monitoring">
-          <app-chart 
-            title="Monthly Temperature Trends" 
-            label="Temperature (°C)"
-            border-color="#ffa726"
-            background-color="rgba(255, 167, 38, 0.2)">
-          </app-chart>
-          <div slot="footer" class="card-actions card-actions--flush">
-            <app-button variant="flush">View Report</app-button>
-            <app-button variant="flush">Download PDF</app-button>
-          </div>
-        </app-card>
-        
-        <!-- Feature Info Card -->
-        <app-card title="Mobile Features">
-          <p>This dashboard is designed mobile-first with scroll-based hover effects. As you scroll, cards automatically highlight when they come into view, creating a smooth and intuitive user experience.</p>
-          <div slot="footer" class="card-actions card-actions--flush">
-            <app-button variant="flush">Smooth!</app-button>
-            <app-button variant="flush">Clean!</app-button>
-            <app-button variant="flush">Modern!</app-button>
-          </div>
-        </app-card>
+const app = document.getElementById("app");
+if (!app) {
+  throw new Error("Missing #app container");
+}
+
+app.innerHTML = `
+  <div class="page">
+    <header class="hero">
+      <h1>SolarMobile UI</h1>
+      <p class="lede">
+        EG4 Component library
+      </p>
+    </header>
+
+    <section class="section" id="buttons">
+      <div class="section__head">
+        <div>
+          <h2>Buttons</h2>
+          <p class="section__desc">
+            Shoelace sl-button with built-in variants and sizes.
+          </p>
+        </div>
       </div>
-    </div>
-  `;
+      <div class="example-row">
+        <sl-button variant="primary">Primary</sl-button>
+        <sl-button variant="default">Default</sl-button>
+        <sl-button variant="success">Success</sl-button>
+        <sl-button variant="neutral">Neutral</sl-button>
+        <sl-button variant="warning">Warning</sl-button>
+        <sl-button variant="danger">Danger</sl-button>
+      </div>
+      <div class="example-row">
+        <sl-button variant="text">Text</sl-button>
+        <sl-button variant="primary" outline>Outline</sl-button>
+        <sl-button variant="primary" pill>Pill</sl-button>
+        <sl-button variant="primary" disabled>Disabled</sl-button>
+      </div>
+      <div class="example-row">
+        <sl-button size="small">Small</sl-button>
+        <sl-button size="medium">Medium</sl-button>
+        <sl-button size="large">Large</sl-button>
+      </div>
+    </section>
 
-  // Handle button clicks
-  app.addEventListener("app-click", (e) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === "APP-BUTTON") {
-      console.log("Button clicked:", target.textContent);
-    }
-  });
+    <section class="section" id="cards">
+      <div class="section__head">
+        <div>
+          <h2>Cards</h2>
+          <p class="section__desc">
+            Shoelace sl-card with header, body, and footer slots.
+          </p>
+        </div>
+      </div>
+      <div class="stack">
+        <sl-card class="card-demo">
+          <div slot="header">Analytics Snapshot</div>
+          <p>
+            Use header and footer slots for structured content. The card glows on hover.
+          </p>
+          <div slot="footer" class="card-actions">
+            <sl-button size="small" variant="default">Export</sl-button>
+            <sl-button size="small" variant="primary">View details</sl-button>
+          </div>
+        </sl-card>
 
-  // Set custom data for charts after they're rendered
-  setTimeout(() => {
-    const charts = app.querySelectorAll("app-chart");
-    const chartStacks = app.querySelectorAll("app-chart-stack");
+        <sl-card class="card-demo">
+          <div slot="header">Compact Footer</div>
+          <p>Footers keep actions grouped at the bottom.</p>
+          <div slot="footer" class="card-actions">
+            <sl-button variant="success" size="small">Accept</sl-button>
+            <sl-button variant="neutral" size="small">Hold</sl-button>
+            <sl-button variant="danger" size="small">Reject</sl-button>
+          </div>
+        </sl-card>
+      </div>
+    </section>
 
-    // Chart Stack with multiple datasets
-    if (chartStacks[0]) {
-      const chartStack = chartStacks[0] as any;
-      chartStack.title = "Solar Energy vs Temperature vs Wind Speed";
-      chartStack.labels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      chartStack.datasets = [
-        {
-          label: "Solar Energy (kWh)",
-          data: [45, 52, 68, 84, 95, 112, 118, 108, 89, 67, 48, 41],
-          borderColor: "#ff6b35",
-          fill: true,
-        },
-        {
-          label: "Temperature (°C)",
-          data: [2, 5, 12, 18, 24, 28, 32, 31, 26, 19, 10, 4],
-          borderColor: "#4ecdc4",
-          fill: true,
-        },
-        {
-          label: "Wind Speed (m/s)",
-          data: [8, 12, 15, 18, 22, 25, 28, 26, 20, 16, 10, 6],
-          borderColor: "#45b7d1",
-          fill: true,
-        },
-        {
-          label: "Battery Level (%)",
-          data: [75, 68, 82, 90, 95, 88, 92, 85, 78, 72, 70, 74],
-          borderColor: "#f9ca24",
-          fill: true,
-        },
-      ];
-    }
+    <section class="section" id="charts">
+      <div class="section__head">
+        <div>
+          <h2>Charts</h2>
+          <p class="section__desc">Chart.js powered line and multi-series stacks.</p>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        <sl-card class="card-demo">
+          <div slot="header">Multi-series stack</div>
+          <app-chart-stack id="chart-stack-demo"></app-chart-stack>
+        </sl-card>
+        <sl-card class="card-demo">
+          <div slot="header">Single series</div>
+          <app-chart id="chart-demo"></app-chart>
+        </sl-card>
+      </div>
+    </section>
 
-    // Solar Energy Production Chart
-    if (charts[0]) {
-      const solarChart = charts[0] as any;
-      solarChart.labels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      solarChart.data = [45, 52, 68, 84, 95, 112, 118, 108, 89, 67, 48, 41];
-    }
+    <section class="section" id="model">
+      <div class="section__head">
+        <div>
+          <h2>3D House Card</h2>
+          <p class="section__desc">
+            GLTF loader with theme-aware shader and lazy render.
+          </p>
+        </div>
+      </div>
+      <app-house-card title="Solar-ready home" height="420"></app-house-card>
+    </section>
+  </div>
+`;
 
-    // Temperature Chart
-    if (charts[1]) {
-      const tempChart = charts[1] as any;
-      tempChart.labels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      tempChart.data = [2, 5, 12, 18, 24, 28, 32, 31, 26, 19, 10, 4];
-    }
-  }, 100);
-});
+const stackChart = document.querySelector("#chart-stack-demo") as
+  | AppChartStack
+  | null;
+const singleChart = document.querySelector("#chart-demo") as AppChart | null;
 
-// Prevent zoom on double-tap (iOS)
-let lastTouchEnd = 0;
-document.addEventListener(
-  "touchend",
-  (event) => {
-    const now = new Date().getTime();
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault();
-    }
-    lastTouchEnd = now;
-  },
-  false
-);
+if (stackChart) {
+  stackChart.title = "Energy vs Weather";
+  stackChart.labels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  stackChart.datasets = [
+    {
+      label: "Solar (kWh)",
+      data: [45, 52, 68, 84, 95, 112, 118, 108, 89, 67, 48, 41],
+      borderColor: "#ff6b35",
+    },
+    {
+      label: "Temperature (°C)",
+      data: [2, 5, 12, 18, 24, 28, 32, 31, 26, 19, 10, 4],
+      borderColor: "#4ecdc4",
+    },
+    {
+      label: "Wind (m/s)",
+      data: [8, 12, 15, 18, 22, 25, 28, 26, 20, 16, 10, 6],
+      borderColor: "#45b7d1",
+    },
+  ];
+}
+
+if (singleChart) {
+  singleChart.title = "Monthly Solar Production";
+  singleChart.label = "Energy (kWh)";
+  singleChart.labels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  singleChart.data = [45, 52, 68, 84, 95, 112, 118, 108, 89, 67, 48, 41];
+  singleChart.borderColor = "#ffa726";
+}
+
+// Briefly show the loading screen component so it appears in the showcase.
+const loadingShowcase = document.createElement("app-loading-screen");
+loadingShowcase.message = "Demonstrating loading state...";
+document.body.appendChild(loadingShowcase);
+setTimeout(() => loadingShowcase.hide(), 900);

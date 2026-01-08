@@ -29,8 +29,8 @@ Chart.register(
 @customElement("app-chart")
 export class AppChart extends LitElement {
   @property({ type: String }) title = "Chart";
-  @property({ type: Array }) labels: string[] = [];
-  @property({ type: Array }) data: number[] = [];
+  @property({ attribute: false }) labels: string[] = [];
+  @property({ attribute: false }) data: number[] = [];
   @property({ type: String }) label = "Dataset";
   @property({ type: String }) borderColor = "#ff6b35";
   @property({ type: String }) backgroundColor = "rgba(255, 107, 53, 0.1)";
@@ -51,16 +51,13 @@ export class AppChart extends LitElement {
     :host {
       display: block;
       width: 100%;
-      height: 400px;
-      background-color: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
+      height: 380px;
       box-sizing: border-box;
     }
 
     .chart-container {
       width: 100%;
-      height: calc(100% - var(--space-8));
+      height: calc(100% - 36px);
       position: relative;
     }
 
@@ -70,11 +67,15 @@ export class AppChart extends LitElement {
     }
 
     .chart-title {
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-base);
       font-weight: var(--font-weight-semibold);
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-2);
       color: var(--text);
       text-align: center;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   `;
 

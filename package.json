@@ -1,21 +1,40 @@
 {
-  "name": "solar-mobile",
-  "private": true,
-  "version": "0.0.0",
+  "name": "solarmobile-ui",
+  "private": false,
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build:types": "tsc -p tsconfig.json",
+    "build": "npm run build:types && vite build",
+    "build:demo": "npm run build:types && vite build --mode demo",
+    "preview": "vite preview",
+    "deploy": "npm run build:demo && gh-pages -d dist"
   },
-  "dependencies": {
-    "@types/three": "^0.178.0",
+  "peerDependencies": {
+    "@shoelace-style/shoelace": "^2.20.0",
     "chart.js": "^4.5.0",
     "lit": "^3.3.0",
     "three": "^0.178.0"
   },
   "devDependencies": {
+    "@shoelace-style/shoelace": "^2.20.1",
+    "@types/three": "^0.178.0",
+    "chart.js": "^4.5.0",
+    "gh-pages": "^6.3.0",
+    "lit": "^3.3.0",
+    "three": "^0.178.0",
     "typescript": "~5.8.3",
     "vite": "^7.0.0"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/solarmobile-ui.es.js",
+      "require": "./dist/solarmobile-ui.cjs"
+    }
+  },
+  "main": "./dist/solarmobile-ui.cjs",
+  "module": "./dist/solarmobile-ui.es.js",
+  "types": "./dist/types/index.d.ts"
 }

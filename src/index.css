@@ -30,9 +30,96 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   padding: var(--space-4);
-  max-width: var(--max-width);
+  max-width: 960px;
   margin: 0 auto;
   overflow-x: hidden;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding-bottom: var(--space-12);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: linear-gradient(145deg, var(--surface), #111827 60%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--font-size-xs);
+  color: var(--text-dim);
+}
+
+.lede {
+  font-size: var(--font-size-lg);
+  color: var(--text-dim);
+  max-width: 720px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section__desc {
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.example-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 
 /* Typography Scale - Simplified */
@@ -84,15 +171,31 @@ p {
   gap: var(--space-8);
 }
 
-/* Card Actions - Simplified */
+/* Card Actions */
 .card-actions {
   display: flex;
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-4);
-  border-top: 1px solid var(--border);
-  background-color: var(--surface);
   flex-wrap: wrap;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-actions sl-button {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.card-actions sl-button::part(base) {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-actions--flush {
